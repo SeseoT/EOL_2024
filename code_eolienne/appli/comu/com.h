@@ -37,6 +37,7 @@ void initCOMs(uart_id_e uart_id, uint32_t baudrate);
 bool_e comIRQ(uart_id_e uart_id);
 void  getTrame(trame_struct * trame);
 void  putTrame(trame_struct * trame);
+void videUart();
 
 
 #endif /* COM_COM_H_ */

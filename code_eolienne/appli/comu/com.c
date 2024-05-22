@@ -61,6 +61,22 @@ void putTrame(trame_struct * trame){
 		UART_putc(UART2_ID,tramTotale[o]);
 		UART_putc(UART3_ID,tramTotale[o]);
 	}
+}
+void videUart(){
+	static uint16_t index = 0;
+	uint8_t c=0;
+	if(UART_data_ready(UART2_ID)){
+		while(c != '\n')
+		{
+			if(UART_data_ready(UART2_ID)){
+				c = UART_getc(UART2_ID);			//lecture du prochain caract�re
+							//On m�morise le caract�re dans le tableau
+				index++;
+			}
+											//on incr�mente l'index (si < TAB_SIZE -2 !)
+		}
+	}
 
+index = 0;
 
 }

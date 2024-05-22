@@ -342,10 +342,11 @@ void calibrage(eolienne_t *eolienne,servo_t *servoH, servo_t *servoO ){
 	}
 	//mis a jour final
 	eolienne->currentHauteur = hRef;
-	SERVO_set_position(servoH, hRef);
+	SERVO_set_position(&servoH, hRef);
 	eolienne->currentOrientation = oRef;
-	SERVO_set_position(servoH, oRef);
+	SERVO_set_position(&servoH, oRef);
 	eolienne->tension = vRef;
+	videUart();
 
 }
 void eolienne_print_param(eolienne_t * eolienne){
