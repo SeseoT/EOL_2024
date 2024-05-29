@@ -62,10 +62,9 @@
 
 #define USE_BSP_EXTIT			1 //Utilisation du module de gestion des it externe : stm32f1_extit.c/h
 
-#define USE_INTERNAL_FLASH_AS_EEPROM	0
+#define USE_INTERNAL_FLASH_AS_EEPROM	1
 
 #define USE_BSP_TIMER			1 //Utilisation de stm32f1_timer.c/h
-
 
 #define USE_ADC					1
 	//Ces configurations permettent d'activer les entr�es analogiques souhait�es.

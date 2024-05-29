@@ -1,10 +1,11 @@
-/*
- * interface.c
- *
- *  Created on: 2 mai 2024
- *      Author: axoul
- */
-
+/**
+  ******************************************************************************
+  * @file    interface.c
+  * @author  GAILLARD Axel
+  * @date    may-2024
+  * @brief   interface screen functions.
+  ******************************************************************************
+*/
 #include "interface.h"
 
 static volatile uint32_t absolute_t = 0;
@@ -20,7 +21,7 @@ pot_t pot_tab[NBR_OF_POT] = {{POT_1_X1,POT_1_X2,POT_1_Y1,POT_1_Y2,0},{POT_2_X1,P
 
 acq_tab_t acq_tab[NBR_OF_TAB] = {{ACQ_M_X1,ACQ_M_X2,ACQ_M_Y1,ACQ_M_Y2},{ACQ_A_X1,ACQ_A_X2,ACQ_A_Y1,ACQ_A_Y2}};
 
-param_t param = {(float)0.0, (float)0.0 , 10 , 100, 0,0,DFLT_T_CALIBRAGE,MANUAL_MODE, FALSE};
+param_t param = {(float)0.0, (float)0.0 , 10 , 100, 0,0,DFLT_T_CALIBRAGE,RESEARCH_MODE, FALSE};
 
 uint8_t tab_values_volt[SIZE_TAB];
 
@@ -29,14 +30,29 @@ static uint16_t text_color       	    = ILI9341_COLOR_BLACK;
 static state_interface_e state          = HOME;
 static state_interface_e previous_state = HOME;
 
-void INTERFACE_TFT_process_ms();
+static void INTERFACE_TFT_process_ms();
 
+/**
+ * @brief 
+ * 
+ * @param new_mode 
+ */
 void fill_mode_param(state_interface_e new_mode)
 {
 	param.mode = new_mode;
 	param.flag = TRUE;
 }
 
+/**
+ * @brief 
+ * 
+ * @param temperature 
+ * @param voltage 
+ * @param inclinaison 
+ * @param hauteur 
+ * @param DTC 
+ * @param DTC_nbr 
+ */
 void fill_values_param(float temperature, float voltage, uint8_t inclinaison, uint8_t hauteur, uint8_t DTC, uint8_t DTC_nbr)
 {
 	if(hauteur != 0xFF)
@@ -57,6 +73,11 @@ void fill_values_param(float temperature, float voltage, uint8_t inclinaison, ui
 	param.flag = TRUE;
 }
 
+/**
+ * @brief 
+ * 
+ * @param voltage 
+ */
 void fill_voltage_tab(uint8_t voltage)
 {
 	uint8_t i = 0;
@@ -84,6 +105,12 @@ void fill_voltage_tab(uint8_t voltage)
 	}
 }
 
+/**
+ * @brief 
+ * 
+ * @param tab 
+ * @param background_color 
+ */
 void fill_values_acquisition_tab(acq_tab_t *tab,uint16_t background_color)
 {
 	int16_t hauteur = (int16_t)((int16_t)(tab->y2-5) - (int16_t)(tab->y1+(tab->y2-tab->y1)*0.25));
@@ -116,6 +143,13 @@ void fill_values_acquisition_tab(acq_tab_t *tab,uint16_t background_color)
 	}
 }
 
+/**
+ * @brief 
+ * 
+ * @param button_param 
+ * @param background_color 
+ * @param text_color 
+ */
 void change_calib(button_t *button_param,uint16_t background_color,uint16_t text_color)
 {
 	if(button_param->text == '-')
@@ -133,6 +167,14 @@ void change_calib(button_t *button_param,uint16_t background_color,uint16_t text
 	fill_t_calibrage(&param,background_color,text_color);
 }
 
+/**
+ * @brief 
+ * 
+ * @param button_tab 
+ * @param button_mode 
+ * @param background_color 
+ * @param text_color 
+ */
 void change_mode(button_t *button_tab,button_t *button_mode,uint16_t background_color,uint16_t text_color)
 {
 	if(button_mode->text == 'M')
@@ -165,9 +207,42 @@ void change_mode(button_t *button_tab,button_t *button_mode,uint16_t background_
 	}
 }
 
-void INTERFACE_TFT_init(void)
+/**
+ * @brief 
+ * 
+ */
+void change_mode_protected(void)
+{
+
+	if (param.mode == PROTECTED_MODE || param.mode == RESEARCH_MODE)
+	{
+		state = HOME;
+		button_tab[1].color = ILI9341_COLOR_BLUE;
+		button_tab[2].color = ILI9341_COLOR_BLUE;
+	}
+	if (param.mode == AUTOMATICAL_MODE)
+	{
+		button_tab[1].color = ILI9341_COLOR_BLUE;
+		button_tab[2].color = ILI9341_COLOR_RED;
+	}
+	if (param.mode == MANUAL_MODE)
+	{
+		button_tab[1].color = ILI9341_COLOR_RED;
+		button_tab[2].color = ILI9341_COLOR_BLUE;
+	}
+	fill_button(&button_tab[2]);
+	fill_button(&button_tab[1]);
+}
+
+/**
+ * @brief 
+ * 
+ * @return state_interface_e* 
+ */
+state_interface_e * INTERFACE_TFT_init(void)
 {
 	Systick_add_callback_function(&INTERFACE_TFT_process_ms);
+
 	ILI9341_Init();	//initialisation de l'�cran TFT
 	ILI9341_Rotate(ILI9341_Orientation_Landscape_2);
 
@@ -182,8 +257,14 @@ void INTERFACE_TFT_init(void)
 		tab_values_volt[i] = 0xFF;
 	}
 
+	return &param.mode;
 }
 
+/**
+ * @brief 
+ * 
+ * @param background_color 
+ */
 void INTERFACE_TFT_init_page(uint16_t background_color)
 {
 	ILI9341_Fill(background_color);
@@ -195,6 +276,13 @@ void INTERFACE_TFT_init_page(uint16_t background_color)
 	}
 }
 
+/**
+ * @brief 
+ * 
+ * @param i 
+ * @param background_color 
+ * @param text_color 
+ */
 void INTERFACE_TFT_init_automatical_page(int16_t i,uint16_t background_color,uint16_t text_color)
 {
 	INTERFACE_TFT_init_page(background_color);
@@ -209,6 +297,12 @@ void INTERFACE_TFT_init_automatical_page(int16_t i,uint16_t background_color,uin
 	}
 }
 
+/**
+ * @brief 
+ * 
+ * @param background_color 
+ * @param text_color 
+ */
 void INTERFACE_TFT_init_home(uint16_t background_color,uint16_t text_color)
 {
 	INTERFACE_TFT_init_page(background_color);
@@ -226,6 +320,13 @@ void INTERFACE_TFT_init_home(uint16_t background_color,uint16_t text_color)
 	}
 }
 
+/**
+ * @brief 
+ * 
+ * @param i 
+ * @param background_color 
+ * @param text_color 
+ */
 void INTERFACE_TFT_init_manual_page(int16_t i,uint16_t background_color,uint16_t text_color)
 {
 	INTERFACE_TFT_init_page(background_color);
@@ -241,7 +342,10 @@ void INTERFACE_TFT_init_manual_page(int16_t i,uint16_t background_color,uint16_t
 	fill_values_acquisition_tab(&acq_tab[0],background_color);
 }
 
-
+/**
+ * @brief 
+ * 
+ */
 void interface_state_machine()
 {
 	bool_e entrance = (state!=previous_state)?TRUE:FALSE;
@@ -256,7 +360,6 @@ void interface_state_machine()
 
 		if(param.flag)
 		{
-			fill_values(state, &param, background_color, text_color);
 			if(state == MANUAL_MODE)
 			{
 				fill_values_acquisition_tab(&acq_tab[0],background_color);
@@ -270,6 +373,11 @@ void interface_state_machine()
 				fill_mode(&param,background_color,text_color);
 				fill_DTC_str(&param, background_color, text_color);
 			}
+			if(param.mode == PROTECTED_MODE || param.mode == RESEARCH_MODE)
+			{
+				change_mode_protected();
+			}
+			fill_values(state, &param, background_color, text_color);
 			param.flag = FALSE;
 		}
 
@@ -397,7 +505,11 @@ void interface_state_machine()
 		}
 }
 
-void INTERFACE_TFT_process_ms(void)
+/**
+ * @brief 
+ * 
+ */
+static void INTERFACE_TFT_process_ms(void)
 {
 	absolute_t++;
 	if(absolute_t >= 0xFFFFFF00)

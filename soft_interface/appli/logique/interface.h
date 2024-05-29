@@ -2,7 +2,7 @@
  * interface.h
  *
  *  Created on: 2 mai 2024
- *      Author: axoul
+ *      Author: axel GAILLARD
  */
 
 #ifndef APPLICATION_INTERFACE_H_
@@ -21,7 +21,7 @@
 #include "systick.h"
 
 
-void INTERFACE_TFT_init(void);
+state_interface_e * INTERFACE_TFT_init(void);
 
 void interface_state_machine();
 
@@ -41,5 +41,7 @@ void fill_values_acquisition_tab(acq_tab_t *tab,uint16_t background_color);
 void change_calib(button_t *button_param,uint16_t background_color,uint16_t text_color);
 
 void change_mode(button_t *button_tab,button_t *button_mode,uint16_t background_color,uint16_t text_color);
+
+void change_mode_protected(void);
 
 #endif /* APPLICATION_INTERFACE_H_ */

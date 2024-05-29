@@ -1,6 +1,18 @@
+/**
+  ******************************************************************************
+  * @file    communication.c
+  * @author  GAILLARD Axel
+  * @date    July-2024
+  * @brief   encode and decode communication functions.
+  ******************************************************************************
+*/
 #include "communication.h"
 
-
+/**
+ * @brief decode a generic frame
+ * 
+ * @param buffer 
+ */
 void decode_trame(uint8_t *buffer)
 {
 	switch(buffer[0])
@@ -29,6 +41,17 @@ void decode_trame(uint8_t *buffer)
 			}
 }
 
+/**
+ * @brief encode a frame with the right type and value 
+ * 
+ * @param buffer     output buffer
+ * @param size       size of this buffer
+ * @param type       
+ * @param dtc_type 
+ * @param mode_type 
+ * @param pot_type 
+ * @param value 
+ */
 void encode_trame(uint8_t * buffer, uint8_t size,trame_type_e type, dtc_type_e dtc_type, mode_type_e mode_type, pot_type_e pot_type, uint32_t value)
 {
 	for(int i=0; i<size;i++)
@@ -64,6 +87,16 @@ void encode_trame(uint8_t * buffer, uint8_t size,trame_type_e type, dtc_type_e d
 	buffer[7] = 10;
 }
 
+/**
+ * @brief transmit a frame with the right type and value
+ * 
+ * @param trsmt_mode 
+ * @param type 
+ * @param dtc_type 
+ * @param mode_type 
+ * @param pot_type 
+ * @param value 
+ */
 void transmit_trame(transmition_mode trsmt_mode,trame_type_e type, dtc_type_e dtc_type, mode_type_e mode_type, pot_type_e pot_type, uint32_t value)
 {
 	uint8_t buffer[8];
@@ -74,9 +107,15 @@ void transmit_trame(transmition_mode trsmt_mode,trame_type_e type, dtc_type_e dt
 	}
 	else if(trsmt_mode == rf)
 	{
-
+		//non implementer (nrfl01.h)
 	}
 }
+
+/**
+ * @brief decode a temp and voltage type frame
+ * 
+ * @param buffer 
+ */
 void decode_temp_voltage(uint8_t *buffer)
 {
 	float temp = ((float)((buffer[1]<<8)+(buffer[2])))/10;
@@ -85,6 +124,11 @@ void decode_temp_voltage(uint8_t *buffer)
 	fill_values_param(temp, voltage, null_data,null_data,null_data,null_data);
 }
 
+/**
+ * @brief decode a height type frame
+ * 
+ * @param buffer 
+ */
 void decode_height(uint8_t *buffer)
 {
 	uint8_t hauteur = buffer[1];
@@ -93,6 +137,11 @@ void decode_height(uint8_t *buffer)
 	fill_values_param(255.0, 255.0, inclinaison,hauteur,null_data,null_data);
 }
 
+/**
+ * @brief decode a mode type frame
+ * 
+ * @param mode 
+ */
 void decode_mode(mode_type_e mode)
 {
 	if(mode != PROTECTED)
@@ -100,8 +149,14 @@ void decode_mode(mode_type_e mode)
 		fill_values_param(255.0, 255.0,0xFF, 0xFF,0,0);
 	}
 	fill_mode_param(mode);
+	change_mode_protected();
 }
 
+/**
+ * @brief decode a error type frame
+ * 
+ * @param code_dtc 
+ */
 void decode_DTC(uint8_t code_dtc)
 {
 	uint8_t null_data = (uint8_t)(0xFF);
@@ -111,6 +166,10 @@ void decode_DTC(uint8_t code_dtc)
 static uint8_t buffer[8];
 static uint16_t i = 0;
 
+/**
+ * @brief get a frame from an uart rx
+ * 
+ */
 void uart_communication(void)
 {
 	uint8_t c=0;

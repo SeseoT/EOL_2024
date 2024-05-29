@@ -1,9 +1,20 @@
+/*
+ * interface_tft.h
+ *
+ *  Created on: 20 avril 2024
+ *      Author: axel GAILLARD
+ */
 
 #ifndef INTERFACE_TFT_H_
 #define INTERFACE_TFT_H_
 
 #include "config.h"
 #if USE_SCREEN_TFT_ILI9341
+
+
+#include "stm32f1_xpt2046.h"
+#include "stm32f1_ili9341.h"
+#include "stm32f1_fonts.h"
 
 
 #define NBR_OF_BUTTON 				4
@@ -34,11 +45,11 @@
 
 typedef enum
 {
-	HOME,
 	AUTOMATICAL_MODE,
 	MANUAL_MODE,
 	PROTECTED_MODE,
-	RESEARCH_EOL
+	RESEARCH_MODE,
+	HOME,
 }state_interface_e;
 
 typedef struct
@@ -129,7 +140,7 @@ void search_time_over(uint32_t absolute_t,button_t *button_tab, int8_t nb_button
 #define BUTTON_2_Y1 5
 #define BUTTON_2_Y2 45
 #define BUTTON_2_text 'M'
-#define BUTTON_2_color ILI9341_COLOR_RED
+#define BUTTON_2_color ILI9341_COLOR_BLUE
 
 //button 3
 #define BUTTON_3_X1 95
@@ -338,12 +349,12 @@ void search_time_over(uint32_t absolute_t,button_t *button_tab, int8_t nb_button
 #define DTC_N_Y2 230
 
 
-#define STR_T_MAX  "la temperature mon reuf"
-#define STR_T_MIN  "la temperature mon keuf"
-#define STR_V_MAX  "la tension mon reuf    "
-#define STR_NO_EOL "AUCUNE EOLIENNE TROUVE "
+#define STR_T_MAX  "La temperature est haute"
+#define STR_T_MIN  "La temperature est basse"
+#define STR_V_MAX  "Le vent soufle trop fort"
+#define STR_NO_EOL "AUCUNE EOLIENNE TROUVE  "
 
-#define STR_SIZE 24
+#define STR_SIZE 25
 
 #endif
 #endif /* INTERFACE_TFT_H_ */

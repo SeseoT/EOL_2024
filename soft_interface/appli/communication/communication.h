@@ -1,3 +1,9 @@
+/*
+ * communication.h
+ *
+ *  Created on: 10 mai 2024
+ *      Author: axel GAILLARD
+ */
 
 #ifndef COMMUNICATION_H_
 #define COMMUNICATION_H_
@@ -44,6 +50,7 @@ typedef enum   //type de trame de paramétrage des consignes
 	AUTO,
 	MANUAL,
 	PROTECTED,
+	RESEARCH_EOL,
 	mode_none,
 }mode_type_e;
 
