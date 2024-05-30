@@ -34,8 +34,8 @@ typedef enum //type de trame principales
 typedef enum   //type de trame de remonter de default
 {
 	V_max,
-	T_max,
 	T_min,
+	T_max,
 	dtc_none,
 }dtc_type_e;
 
