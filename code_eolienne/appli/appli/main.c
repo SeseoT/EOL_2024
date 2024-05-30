@@ -79,18 +79,9 @@ int main(void)
 
 	printf("GO");
 	t=100;//On envoies la trame tt les 1000ms
-	float tempe=0;
-	NTC_init();
+	
 	while(1)	//boucle de t�che de fond
 	{
-
-
-		//tempe = NTC_getValue(ADC_4);
-		//printf("Temp T:%f\n",tempe);
 		state_machine(&t,&tCalibms,&tModeSecu);
-		//if(t==0){
-			//t=100;
-		//}
-
 	}
 }

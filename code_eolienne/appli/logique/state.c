@@ -387,6 +387,7 @@ void initStateMachine(eolienne_t * eolienne,servo_t * servoHauteur,servo_t * ser
 	EOL_init();
 	SERVO_init();
 	BUTTON_init();
+	NTC_init();
 	flash_read_values(eolienne->memoireFlash, SIZE_BUFFER_MEMOIRE_FLASH);
 	servoHauteur->servo_num = SERVO_0;
 	servoOrientation->servo_num = SERVO_1;
