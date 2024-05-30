@@ -17,7 +17,12 @@ static void process_ms(void);
 static volatile bool_e flag_10ms;
 static volatile uint32_t t = 0;
 static bool_e initialized = FALSE;
-
+/**
+ * @brief Initializes the button module.
+ *
+ * This function configures the GPIO for the blue button as input with pull-up
+ * and high speed, and adds a callback function to the systick timer.
+ */
 void BUTTON_init(void)
 {
 	//Initialisation du port du bouton bleu en entr�e
@@ -28,7 +33,12 @@ void BUTTON_init(void)
 
 	initialized = TRUE;
 }
-
+/**
+ * @brief Systick callback function to process time in milliseconds.
+ *
+ * This function increments a counter every millisecond and sets a flag
+ * every 10 milliseconds.
+ */
 static void process_ms(void)
 {
 	static uint32_t t10ms = 0;
@@ -45,6 +55,17 @@ static void process_ms(void)
 	Pr�condition : avoir appel� auparavant BUTTON_init();
 	Si un appui vient d'�tre fait, elle renverra BUTTON_EVENT_SHORT_PRESS ou BUTTON_EVENT_LONG_PRESS
 */
+/**
+ * @brief State machine for detecting button presses.
+ *
+ * This state machine handles the detection of button presses and releases.
+ * It must be called in a loop regularly. It will return BUTTON_EVENT_SHORT_PRESS
+ * or BUTTON_EVENT_LONG_PRESS if a button press is detected.
+ *
+ * Precondition: BUTTON_init() must be called beforehand.
+ *
+ * @return The button event type.
+ */
 button_event_e BUTTON_state_machine(void)
 {
 	typedef enum

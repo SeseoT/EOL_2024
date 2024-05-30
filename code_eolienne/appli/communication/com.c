@@ -8,15 +8,39 @@
 #include "stm32f1_uart.h"
 #include "com.h"
 
+/**
+ * @brief Initializes UART communication.
+ *
+ * This function initializes UART communication with the specified baud rate.
+ *
+ * @param uart_id The ID of the UART interface to initialize.
+ * @param baudrate The baud rate for UART communication.
+ */
 void initCOMs(uart_id_e uart_id, uint32_t baudrate){
 	UART_init(uart_id, baudrate);
 }
 
+/**
+ * @brief Checks if there is data available for communication.
+ *
+ * This function checks if there is data available for communication on the specified UART interface.
+ *
+ * @param uart_id The ID of the UART interface to check.
+ * @return TRUE if data is available, FALSE otherwise.
+ */
 bool_e comIRQ(uart_id_e uart_id){//IRQ a changer
 	return UART_data_ready(UART2_ID);
 }
 
 //fonction qui remplie la structure d'une trame
+/**
+ * @brief Retrieves a frame of data from UART communication.
+ *
+ * This function retrieves a frame of data from UART communication, fills the provided frame structure,
+ * and prints the received data for debugging purposes.
+ *
+ * @param trame Pointer to the structure to fill with the received frame data.
+ */
 void  getTrame(trame_struct * trame){
 	static uint8_t TAB_trame[TRAME_TOTAL_SIZE];
 	static uint16_t index = 0;
@@ -45,6 +69,13 @@ void  getTrame(trame_struct * trame){
 
 }
 
+/**
+ * @brief Sends a frame of data via UART communication.
+ *
+ * This function sends a frame of data via UART communication, including the frame type, data, and frame end characters.
+ *
+ * @param trame Pointer to the structure containing the frame data to send.
+ */
 void putTrame(trame_struct * trame){
 	//UART_putc(UART2_ID,trame->data[0]);
 	uint8_t tramTotale[TRAME_TOTAL_SIZE];
@@ -62,6 +93,13 @@ void putTrame(trame_struct * trame){
 		UART_putc(UART3_ID,tramTotale[o]);
 	}
 }
+
+
+/**
+ * @brief Clears the UART buffer.
+ *
+ * This function clears the UART buffer by reading and discarding incoming data until a newline character is encountered.
+ */
 void videUart(){
 	static uint16_t index = 0;
 	uint8_t c=0;

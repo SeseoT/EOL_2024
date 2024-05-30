@@ -16,19 +16,16 @@
 #include "state.h"
 #include "ntc.h"
 
-void writeLED(bool_e b)
-{
-	HAL_GPIO_WritePin(LED_GREEN_GPIO, LED_GREEN_PIN, b);
-}
-
-bool_e readButton(void)
-{
-	return !HAL_GPIO_ReadPin(BLUE_BUTTON_GPIO, BLUE_BUTTON_PIN);
-}
 
 static volatile uint32_t t = 0;
 static volatile uint32_t tCalibms = 0;
 static volatile uint32_t tModeSecu = 0;
+
+/**
+ * @brief Callback function for processing each millisecond.
+ *
+ * This function decrements the time variables and processes state machine tasks.
+ */
 void process_ms(void)
 {
 	if(t){
@@ -44,7 +41,11 @@ void process_ms(void)
 
 }
 
-
+/**
+ * @brief Main function.
+ *
+ * This is the entry point of the program. It initializes hardware peripherals and enters the main loop.
+ */
 int main(void)
 {
 	//Initialisation de la couche logicielle HAL (Hardware Abstraction Layer)

@@ -8,12 +8,16 @@
 #ifndef LOGIC_STATE_H_
 #define LOGIC_STATE_H_
 
+
+
 #define TIMER_MSG 1000 //Temps entre chaque envois de trames
 #define TIMER_BLINK_MSG 100 //Temps de clignotement de la led après un envois de trames
 #define TIMER_MODE_SECU 2000 //Temps en mode sécu après un défautl
+#define SIZE_BUFFER_MEMOIRE_FLASH 3
 
 void state_machine(uint32_t *t,uint32_t *tCalibms,uint32_t *tModeSecu);
 void test_ms(void);
+
 
 typedef enum
 	{
@@ -73,7 +77,10 @@ typedef struct//Structure etat courant de l'éolienne
 		param_eolienne_s paramEolienne;
 		defaut_eolienne_s defautEolienne;
 		float temperature;
+		uint8_t memoireFlash[3];//Indice 0 = pos servo Orientation, 1=pos servo Hauteur, 2 = mode Eolienne
 }eolienne_t;
+
+
 
 
 
