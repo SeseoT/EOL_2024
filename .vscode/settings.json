@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "com.h": "c",
+        "button.h": "c",
+        "eol.h": "c",
+        "flash.h": "c",
+        "led.h": "c",
+        "ntc.h": "c",
+        "servo.h": "c"
+    }
+}

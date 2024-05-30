@@ -8,6 +8,11 @@
 #ifndef LED_H_
 #define LED_H_
 
+#include "config.h"
+#include "macro_types.h"
+#include "stm32f1_gpio.h"
+#include "systick.h"
+
 typedef enum
 {
 	LED_OFF = 0,

@@ -7,9 +7,7 @@
 #include "config.h"
 #if USE_ADC
 
-#include "stm32f1_adc.h"
 #include "eol.h"
-#include "math.h"
 
 /**
  * @brief Initializes the EOL module.

@@ -10,6 +10,8 @@
 #include "macro_types.h"
 #include "config.h"
 #include "stm32f1_gpio.h"
+#include "stm32f1_timer.h"
+
 typedef enum{
 		SERVO_0 = 0,
 		SERVO_1,

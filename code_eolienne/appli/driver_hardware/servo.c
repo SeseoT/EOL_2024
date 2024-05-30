@@ -4,10 +4,6 @@
  *  Created on: 9 févr. 2024
  *      Author: Tanguy Suteau
  */
-#include "stm32f1_timer.h"
-#include "macro_types.h"
-#include "config.h"
-#include "stm32f1_gpio.h"
 #include "servo.h"
 
 #define PERIOD_TIMER 10 //ms

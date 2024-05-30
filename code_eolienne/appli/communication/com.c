@@ -5,7 +5,6 @@
  *      Author: Tanguy Suteau
  */
 
-#include "stm32f1_uart.h"
 #include "com.h"
 
 /**

@@ -8,6 +8,11 @@
 #ifndef BUTTON_H_
 #define BUTTON_H_
 
+#include "config.h"
+#include "stm32f1_gpio.h"
+#include "macro_types.h"
+#include "systick.h"
+
 typedef enum
 {
 	BUTTON_EVENT_NONE,

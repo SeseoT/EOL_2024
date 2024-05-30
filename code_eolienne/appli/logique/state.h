@@ -8,6 +8,15 @@
 #ifndef LOGIC_STATE_H_
 #define LOGIC_STATE_H_
 
+#include "led.h"
+#include "servo.h"
+#include "com.h"
+#include "stm32f1_uart.h"
+#include "state.h"
+#include "systick.h"
+#include "ntc.h"
+#include "button.h"
+#include "flash.h"
 
 
 #define TIMER_MSG 1000 //Temps entre chaque envois de trames

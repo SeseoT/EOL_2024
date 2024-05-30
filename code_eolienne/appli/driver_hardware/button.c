@@ -5,10 +5,6 @@
  *      Author: Nirgal
  */
 #include "button.h"
-#include "config.h"
-#include "stm32f1_gpio.h"
-#include "macro_types.h"
-#include "systick.h"
 
 #define LONG_PRESS_DURATION	1000	//unit� : [1ms] => 1 seconde.
 

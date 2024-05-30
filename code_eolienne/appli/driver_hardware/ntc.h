@@ -3,6 +3,9 @@
 #define NTC_H_
 
 #include "config.h"
+#include "stm32f1_adc.h"
+#include "math.h"
+
 #if USE_ADC
 
 	void  NTC_init();

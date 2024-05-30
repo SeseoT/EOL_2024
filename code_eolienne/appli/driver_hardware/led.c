@@ -5,10 +5,6 @@
  *      Author: Nirgal
  */
 
-#include "config.h"
-#include "macro_types.h"
-#include "stm32f1_gpio.h"
-#include "systick.h"
 #include "led.h"
 
 #define LED_BLINK_PERIOD	200
@@ -34,7 +30,7 @@ void LED_set(led_state_e state)
 	if(led_state != state)
 		t = 0;			//si on change de mode, on reset le compteur.
 
-	led_state = state;	//on enregistre l'état demandé
+	led_state = state;	//on enregistre l'ï¿½tat demandï¿½
 }
 
 

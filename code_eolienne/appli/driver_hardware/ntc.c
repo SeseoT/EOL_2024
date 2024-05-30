@@ -7,11 +7,8 @@
 
 
 #include "config.h"
-#if USE_ADC
-
-#include "stm32f1_adc.h"
 #include "ntc.h"
-#include "math.h"
+#if USE_ADC
 /**
  * @brief Initializes the NTC module.
  *

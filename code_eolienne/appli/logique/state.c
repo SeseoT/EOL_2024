@@ -4,16 +4,9 @@
  *  Created on: 26 mars 2024
  *      Author: Tanguy Suteau
  */
-#include "led.h"
+
 #include "eol.h"
-#include "servo.h"
-#include "com.h"
-#include "stm32f1_uart.h"
-#include "state.h"
-#include "systick.h"
-#include "ntc.h"
-#include "button.h"
-#include "flash.h"
+
 
 
 static state_e state = INIT;

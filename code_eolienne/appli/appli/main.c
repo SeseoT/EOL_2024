@@ -14,7 +14,6 @@
 #include "macro_types.h"
 #include "systick.h"
 #include "state.h"
-#include "ntc.h"
 
 
 static volatile uint32_t t = 0;

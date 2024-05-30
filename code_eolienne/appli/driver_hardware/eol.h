@@ -8,11 +8,14 @@
 #ifndef EOL_H_
 #define EOL_H_
 #include "config.h"
+
+#if USE_ADC
+
 #include "macro_types.h"
-#include "config.h"
 #include "stm32f1_gpio.h"
 #include "stm32f1_adc.h"
-#if USE_ADC
+#include "math.h"
+#include "stm32f1_adc.h"
 
 void EOL_init();
 
