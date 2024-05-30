@@ -48,13 +48,6 @@ void initStateMachine(eolienne_t * eolienne,servo_t * servoHauteur,servo_t * ser
  */
 void calibrage(eolienne_t *eolienne,servo_t *servoH, servo_t *servoO, bool_e *okCalib );
 
-void test_ms(void)
-{
-	if(comIRQ(UART2_ID)){
-			//getTrame(&inputTrame);
-			state = MODE_Receive;
-		}
-}
 
 /**
  * @brief State machine for controlling the eolienne system.
@@ -94,17 +87,15 @@ void state_machine(uint32_t *t, uint32_t *tCalibms,uint32_t *tModeSecu)
 		state = MODE_StandBy;
 		break;
 	case MODE_StandBy://On attend trame de l'IHM et envois l'etat de l'eol
-		//On vérifie si on a recu une trame
 
 		if(comIRQ(UART2_ID)){
 			printf("Comme prete");
 			state = MODE_Receive;
 			break;
 		}
-		//BUTTON_state_machine();
+		
 		if(BUTTON_state_machine() == BUTTON_EVENT_SHORT_PRESS){
 			flash_write_values(eolienne.memoireFlash, SIZE_BUFFER_MEMOIRE_FLASH);
-			//calibrage(&eolienne, &servoHauteur, &servoOrientation,&okCalib);
 			flash_read_values(eolienne.memoireFlash, SIZE_BUFFER_MEMOIRE_FLASH);
 
 		}
@@ -152,7 +143,6 @@ void state_machine(uint32_t *t, uint32_t *tCalibms,uint32_t *tModeSecu)
 			//Seul le défaut en mode sécurité est gérer, on envoi a l'IHM le défaut
 			else if(eolienne.paramEolienne.mode == MODE_Securite){
 				outputTrameDEFAULT.type = DEFAULT;
-				//switch()
 				outputTrameDEFAULT.data[0] = EOL_DEF_TEMP_H;
 				outputTrameDEFAULT.data[1] = eolienne.defautEolienne.tempe_H;
 				putTrame(&outputTrameDEFAULT);
@@ -164,15 +154,15 @@ void state_machine(uint32_t *t, uint32_t *tCalibms,uint32_t *tModeSecu)
 			if(eolienne.paramEolienne.mode != MODE_Securite){
 				//On autorise un calibrage venant de l'eolienne a chaque envoi de donné
 				okCalib = TRUE;
-				//
+				
 
-				eolienne.tension = EOL_tension_V(EOL_getValue(ADC_EOL))/1000;//EOL_getValue(ADC_EOL);//(float)35.6;//
-				eolienne.temperature = NTC_getValue(ADC_Tempe)*10;//(float)219.0;//EOL_getValue(ADC_Tempe);
+				eolienne.tension = EOL_tension_V(EOL_getValue(ADC_EOL))/1000;
+				eolienne.temperature = NTC_getValue(ADC_Tempe)*10;
 
 				outputTrameDATA.type = DATA;
-				outputTrameDATA.data[1] = (uint16_t)eolienne.temperature & 0xFF;//tabTension[0];
-				outputTrameDATA.data[0] = (uint8_t)((uint16_t)eolienne.temperature >>8);//tabTension[1];
-				outputTrameDATA.data[3] = (uint16_t)eolienne.tension & 0xFF;//tabTempe[0];
+				outputTrameDATA.data[1] = (uint16_t)eolienne.temperature & 0xFF;
+				outputTrameDATA.data[0] = (uint8_t)((uint16_t)eolienne.temperature >>8);
+				outputTrameDATA.data[3] = (uint16_t)eolienne.tension & 0xFF;
 				outputTrameDATA.data[2] = (uint8_t)((uint16_t)eolienne.tension >>8);
 				putTrame(&outputTrameDATA);
 				//En mode securité la led reste verte
@@ -195,7 +185,7 @@ void state_machine(uint32_t *t, uint32_t *tCalibms,uint32_t *tModeSecu)
 				calibrage(&eolienne, &servoHauteur, &servoOrientation, &okCalib);
 				*tCalibms = 0;
 			}
-			//Action mode auto : EOL imobile et tt les minutes recherches meilleur spot, si aucun mieux sport on bouge pas ou peu
+			//Action mode auto : EOL imobile et tt les X minutes recherches meilleur spot, si aucun mieux sport on bouge pas ou peu
 
 		}else if(eolienne.paramEolienne.mode == MODE_Manuel){
 			//Mode manuel on prend les valeurs envoyé par l'IHM
@@ -256,11 +246,6 @@ void state_machine(uint32_t *t, uint32_t *tCalibms,uint32_t *tModeSecu)
 		break;
 		}
 
-	/*static trame_struct testTrame;
-	if(comIRQ(UART2_ID)){
-		getTrame(&testTrame);
-	}*/
-
 }
 
 
@@ -277,7 +262,6 @@ void updateParam(eolienne_t *eolienne,trame_struct *trame){
 	switch(trame->data[0]){//Navigation parmi les differents type de parametre
 	case EOL_PARAM_MODE:
 		printf("Update Mode\n");
-		//param  = &eolienne->paramEolienne.mode;
 		eolienne->paramEolienne.mode = trame->data[1];
 		break;
 	case EOL_PARAM_TMPS_M_AUTO:
@@ -299,30 +283,27 @@ void updateParam(eolienne_t *eolienne,trame_struct *trame){
 	default:
 		break;
 	}
-	//param = trame->data[1];
+	
 }
-//004 000 001 013 010
-//001 056 013 010
-//002 070 013 010
+
 
 
 void calibrage(eolienne_t *eolienne,servo_t *servoH, servo_t *servoO, bool_e *okCalib ){
 	//On cadrille une zonne de 10*10
-	//printf("Entrée en calibrage\n");
+
 	uint16_t hRef = SERVO_get_position(*servoH);
 	uint16_t oRef = SERVO_get_position(*servoO);
-	uint16_t vRef = eolienne->tension;//EOL_getValue(ADC_9);
+	uint16_t vRef = eolienne->tension;
 	uint8_t h = 0;
 	uint8_t o = 0;
 	uint16_t vTemp = 0;
 
 	for(o=0 ; o<=2 ; o++){
-		//printf("O++\n");
+	
 		SERVO_set_position(servoO, (uint16_t)o*30);
 		for(h=0 ; h<=10 ; h++){
-			//printf("H++\n");
 			SERVO_set_position(servoH, h*20);
-			vTemp = EOL_tension_V(EOL_getValue(ADC_EOL))/1000;//EOL_getValue(ADC_EOL);
+			vTemp = EOL_tension_V(EOL_getValue(ADC_EOL))/1000;
 			HAL_Delay(500);
 			//On compare si la tension est plus eleve
 			if(vTemp > vRef){
@@ -369,7 +350,7 @@ void eolienne_print_param(eolienne_t * eolienne){
  * @param num The float number to convert.
  * @return The two separate bytes representing the integer and decimal parts.
  */
-uint8_t float_separateur_virgule(float num){//result[0] = parti entiere, result[1] = parti decimal
+uint8_t float_separateur_virgule(float num){
 	uint8_t result[2];
 	uint8_t pEntiere = (uint8_t)num;
 	uint8_t pDecimal = 0;
@@ -380,9 +361,9 @@ uint8_t float_separateur_virgule(float num){//result[0] = parti entiere, result[
 	return result;
 }
 
-//Systick_add_callback_function(&test_ms);
-		//On initialise tous les modules:
 
+		
+//On initialise tous les modules:
 void initStateMachine(eolienne_t * eolienne,servo_t * servoHauteur,servo_t * servoOrientation,bool_e * okCalib,modeEolienne_t * oldMode){
 	EOL_init();
 	SERVO_init();
@@ -438,16 +419,11 @@ void receiveModeStateMachine(modeEolienne_t * oldMode,eolienne_t * eolienne,serv
 		state = MODE_StandBy;
 		break;
 	case PARAM:
-		//updateParam(&eolienne, &inputTrame);
-		//eolienne.paramEolienne.tmpsPeriodeCalibrage = inputTrame.data[0];
-		//calibrage(&eolienne, &servoHauteur, &servoOrientation);
 		eolienne->paramEolienne.tmpsPeriodeCalibrage =(uint32_t)(inputTrame->data[0]<<8)+(inputTrame->data[1]);
 		*tCalibms = 0;
 		state = MODE_StandBy;
 		break;
 	case CALIBRAGE:
-		//updateParam(&eolienne, &inputTrame);
-		//eolienne.paramEolienne.tmpsPeriodeCalibrage = inputTrame.data[0];
 		if(*okCalib){
 			calibrage(eolienne, servoHauteur, servoOrientation,okCalib);
 		}
